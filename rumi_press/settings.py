@@ -39,8 +39,10 @@ class Dev(Configuration):
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
+        'django_registration',
         'django.contrib.staticfiles',
         'books.apps.BooksConfig',
+        'books_auth.apps.BooksAuthConfig',
         'crispy_forms',
         'crispy_bootstrap5',
     ]
@@ -87,11 +89,14 @@ class Dev(Configuration):
     DB_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD', 'mypassword')
     DB_HOST = os.getenv('DATABASE_HOST', 'db')
     DB_PORT = os.getenv('DATABASE_PORT', 3306)
-    DB_NAME = os.getenv('DATABASE_NAME', 'mysql')
+    DB_NAME = os.getenv('DATABASE_NAME', 'mydb')
 
     DATABASES['default'] = dburl(
         f'mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
     )
+
+    # Email settings
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
     # Password validation
     # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -110,6 +115,11 @@ class Dev(Configuration):
             'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
         },
     ]
+
+    AUTH_USER_MODEL = 'books_auth.User'
+
+    LOGIN_REDIRECT_URL = '/accounts/profile/'
+    LOGOUT_REDIRECT_URL = '/accounts/login/'
 
     # Internationalization
     # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -137,6 +147,10 @@ class Dev(Configuration):
     # Crispy Forms Settings
     CRISPY_ALLOWED_TEMPLATE_PACKS = ['bootstrap5']
     CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+    # Django registration
+    ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
+    REGISTRATION_OPEN = False  # Disables registration until the site is ready for it
 
 
 class Prod(Dev):

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div
+        style="width: 400px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+        <h2 class="text-center">Registration Complete</h2>
+        <p class="text-center">You can now <a href="{% url 'login' %}">log in</a> to your account.</p>
+    </div>
+</div>
+{% endblock content %}

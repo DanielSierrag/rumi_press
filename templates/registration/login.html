@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div style="width: 300px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+        <h2 style="text-align: center;">Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy}}
+            <button type="submit" class="btn btn-primary mb-1" style="width: 100%;">Login</button>
+            {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+            <a href="javascript:history.back()" class="btn btn-secondary mb-1" style="width: 100%;">Back</a>
+        </form>
+        <a href="{% url 'django_registration_register' %}" style="display: block; text-align: center; margin-top: 10px;">Don't have an account? Register here</a>
+    </div>
+</div>
+{% endblock content %}

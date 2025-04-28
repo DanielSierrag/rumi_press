@@ -1,5 +1,5 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Book, Category
 from .forms import CategoryForm, BookForm
@@ -9,14 +9,14 @@ from .forms import CategoryForm, BookForm
 # Books CRUD
 
 
-class BookListView(ListView):
+class BookListView(LoginRequiredMixin, ListView):
     model = Book
 
     def get_queryset(self):
         return Book.objects.prefetch_related('category')
 
 
-class BookDetailView(DetailView):
+class BookDetailView(LoginRequiredMixin, DetailView):
     model = Book
 
     def get_queryset(self):
@@ -24,19 +24,19 @@ class BookDetailView(DetailView):
         return qs.prefetch_related('category', 'expense', 'authors')
 
 
-class BookCreateView(CreateView):
+class BookCreateView(LoginRequiredMixin, CreateView):
     model = Book
     form_class = BookForm
     success_url = reverse_lazy('books:index')
 
 
-class BookUpdateView(UpdateView):
+class BookUpdateView(LoginRequiredMixin, UpdateView):
     model = Book
     form_class = BookForm
     success_url = reverse_lazy('books:index')
 
 
-class BookDeleteView(DeleteView):
+class BookDeleteView(LoginRequiredMixin, DeleteView):
     model = Book
     template_name = 'books/object_confirm_delete.html'
     success_url = reverse_lazy('books:index')
@@ -45,14 +45,14 @@ class BookDeleteView(DeleteView):
 # categories CRUD
 
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
 
     def get_queryset(self):
         return Category.objects.prefetch_related('books', 'expenses')
 
 
-class CategoryDetailView(DetailView):
+class CategoryDetailView(LoginRequiredMixin, DetailView):
     model = Category
 
     def get_queryset(self):
@@ -60,19 +60,19 @@ class CategoryDetailView(DetailView):
         return qs.prefetch_related('books')
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin, CreateView):
     model = Category
     form_class = CategoryForm
     success_url = reverse_lazy('books:category_list')
 
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     success_url = reverse_lazy('books:category_list')
 
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
     template_name = 'books/object_confirm_delete.html'
     success_url = reverse_lazy('books:category_list')

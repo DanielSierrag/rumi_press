@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "navbar.html" %}
+<div class="container mt-4">
+    <h2 class="text-center">Profile</h2>
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

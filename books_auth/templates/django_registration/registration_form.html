@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Sign Up{% endblock title %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div style="width: 400px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+        <h2 style="text-align: center;">Login</h2>
+        {% crispy form %}
+        <p class="">already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+</div>
+{% endblock content %}
