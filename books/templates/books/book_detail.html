@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load books_extra %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="card-title text-primary">{{ book.title }}</h1>
+            <h2 class="card-subtitle text-muted mb-3">{{ book.subtitle }}</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Category:</strong> {{ book.category }}</li>
+                <li class="list-group-item"><strong>Authors:</strong> {% book_authors book %}</li>
+                <li class="list-group-item"><strong>Publisher:</strong> {{ book.publisher }}</li>
+                <li class="list-group-item"><strong>Published Date:</strong> {{ book.published_date }}</li>
+                <li class="list-group-item"><strong>Expense:</strong> ${{ book.expense }}</li>
+            </ul>
+            <div class="mt-4">
+                <a href="javascript:history.back()" class="btn btn-outline-secondary">Back</a>
+                <a href="{% url 'books:book_update' book.id %}" class="btn btn-outline-primary">Edit</a>
+                <a href="{% url 'books:book_delete' book.id %}" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

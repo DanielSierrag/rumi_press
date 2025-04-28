@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load books_extra %}
 
 {% block title %}Category List{% endblock title %}
 
@@ -9,8 +10,8 @@
     <div class="d-flex justify-content-end mb-3">
         <a href="{% url 'books:category_create' %}" class="btn btn-primary">Add Category</a>
     </div>
-    <table class="table table-striped">
-        <thead>
+    <table class="table table-striped table-bordered">
+        <thead class="table-secondary">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Category Name</th>
@@ -25,7 +26,7 @@
                 <th scope="row">{{ forloop.counter }}</th>
                 <td><a href="{% url 'books:category_detail' category.id %}" class="text-decoration-none">{{ category.name }}</a></td>
                 <td>{{ category.books.count }}</td>
-                <td>{{ category.expenses }}</td>
+                <td>{{ category|total_expenses }}</td>
                 <td>
                     <a href="{% url 'books:category_update' category.id %}" class="btn btn-primary btn-sm">Edit</a>
                     <a href="{% url 'books:category_delete' category.id %}" class="btn btn-danger btn-sm">Delete</a>
