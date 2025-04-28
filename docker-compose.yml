@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:8.0-oraclelinux9
+    environment:
+      DATABASE_USER: root
+      MYSQL_ROOT_PASSWORD: mypassword
+      DATABASE_NAME: mydb
+      DATABASE_HOST: db
+      DATABASE_PORT: 3306
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - djangoapp
+  app:
+    build: .
+    ports:
+      - 80:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    networks:
+      - djangoapp
+    env_file:
+      - .env
+
+volumes:
+  mysql_data:
+
+
+networks:
+  djangoapp:
