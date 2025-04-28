@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name|capfirst }} Category{% endblock title %}
+
+{% block content %}
+{% include "navbar.html" %}
+<div class="container mt-4">
+    {% comment %} Category important information {% endcomment %}
+    <h1 class="text-primary">{{ category.name|capfirst }} Category</h1>
+    <p><strong>Number of books:</strong> {{ category.books.count }}</p>
+    <p><strong>Total expenses:</strong> ${{ category.expenses.first.value }}</p>
+
+    {% comment %} Category actions {% endcomment %}
+    <div class="mt-3">
+        <a href="{% url 'books:category_update' category.id %}" class="btn btn-primary">Edit Category</a>
+        <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+        <a href="{% url 'books:category_delete' category.id %}" class="btn btn-danger">Delete Category</a>
+    </div>
+
+    {% comment %} List of books in the category {% endcomment %}
+    <ul class="list-group mt-3">
+        <h3 class="text-start mb-3">Books in this category</h3>
+        {% for book in category.books.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="#" class="text-decoration-none text-dark">
+                {{ book.title }}
+            </a>
+            <span class="badge bg-primary rounded-pill">${{ book.expense }}</span>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No books available in this category.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

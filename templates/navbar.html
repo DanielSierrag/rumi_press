@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Rumi Press - Books Management</a>
+        <div class="d-flex">
+            {% if user.is_authenticated %}
+                <span class="navbar-text me-3">Hello, {{ request.user.username }}</span>
+                <a class="btn btn-outline-light" href="#">Logout</a>
+            {% else %}
+                <a class="btn btn-outline-light" href="#">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+{% endblock content %}

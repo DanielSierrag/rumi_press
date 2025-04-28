@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Category List{% endblock title %}
+
+{% block content %}
+{% include "navbar.html" %}
+<div class="container mt-4">
+    <h2>Categories</h2>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'books:category_create' %}" class="btn btn-primary">Add Category</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Category Name</th>
+                <th scope="col">Books Count</th>
+                <th scope="col">Distribution expenses</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in category_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="{% url 'books:category_detail' category.id %}" class="text-decoration-none">{{ category.name }}</a></td>
+                <td>{{ category.books.count }}</td>
+                <td>{{ category.expenses }}</td>
+                <td>
+                    <a href="{% url 'books:category_update' category.id %}" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{% url 'books:category_delete' category.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No categories available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

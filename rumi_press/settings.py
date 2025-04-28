@@ -41,6 +41,8 @@ class Dev(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'books.apps.BooksConfig',
+        'crispy_forms',
+        'crispy_bootstrap5',
     ]
 
     MIDDLEWARE = [
@@ -69,6 +71,11 @@ class Dev(Configuration):
             },
         },
     ]
+
+    # Cookie configuration
+    SESSION_COOKIE_AGE = 60 * 30  # 30 minutes
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+    SESSION_SAVE_EVERY_REQUEST = True
 
     WSGI_APPLICATION = 'rumi_press.wsgi.application'
 
@@ -124,6 +131,12 @@ class Dev(Configuration):
     # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
     DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+    # Third-party apps settings
+
+    # Crispy Forms Settings
+    CRISPY_ALLOWED_TEMPLATE_PACKS = ['bootstrap5']
+    CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 
 class Prod(Dev):
