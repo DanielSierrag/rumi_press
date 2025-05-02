@@ -1,16 +1,15 @@
-{% extends "base.html" %}
+{% extends "sidebar.html" %}
 {% load crispy_forms_tags %}
 
 {% block title %}
 {% if 'create' in request.path %}Add Category{% else %}Update Category{% endif %}
 {% endblock title %}
 
-{% block content %}
-{% include "navbar.html" %}
+{% block sb_content %}
 <div class="container mt-4">
     {% if 'create' in request.path %}<h2 class="text-center">Add Category</h2>{% else %}<h2 class="text-center">Update
         Category</h2>{% endif %}
     {% crispy form %}
     <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
 </div>
-{% endblock content %}
+{% endblock sb_content %}

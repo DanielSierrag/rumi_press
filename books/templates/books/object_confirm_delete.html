@@ -1,11 +1,10 @@
-{% extends "base.html" %}
+{% extends "sidebar.html" %}
 
 {% block title %}Confirm Delete{% endblock title %}
 
-{% block content %}
-{% include "navbar.html" %}
+{% block sb_content %}
 
-<div class="container mt-5">
+<div class="container mt-5 text-center">
     <h2>Are you sure you want to delete "{{ object }}"?</h2>
     <form method="post">
         {% csrf_token %}
@@ -13,4 +12,4 @@
         <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
-{% endblock content %}
+{% endblock sb_content %}

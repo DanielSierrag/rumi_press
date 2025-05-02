@@ -1,10 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'sidebar.html' %}
 {% load books_extra %}
 
 {% block title %}{{ book.title }}{% endblock %}
 
-{% block content %}
-{% include 'navbar.html' %}
+{% block sb_content %}
 <div class="container mt-5">
     <div class="card shadow-sm">
         <div class="card-body">
@@ -12,7 +11,7 @@
             <h2 class="card-subtitle text-muted mb-3">{{ book.subtitle }}</h2>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><strong>Category:</strong> {{ book.category }}</li>
-                <li class="list-group-item"><strong>Authors:</strong> {% book_authors book %}</li>
+                <li class="list-group-item"><strong>Authors:</strong> {{ book.authors }}</li>
                 <li class="list-group-item"><strong>Publisher:</strong> {{ book.publisher }}</li>
                 <li class="list-group-item"><strong>Published Date:</strong> {{ book.published_date }}</li>
                 <li class="list-group-item"><strong>Expense:</strong> ${{ book.expense }}</li>
@@ -25,4 +24,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock sb_content %}

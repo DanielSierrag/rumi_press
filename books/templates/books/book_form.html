@@ -1,18 +1,86 @@
-{% extends 'base.html' %}
+{% extends 'sidebar.html' %}
 {% load crispy_forms_tags %}
 
 {% block title %}
     Book Form
 {% endblock %}
 
-{% block content %}
-    {% include 'navbar.html' %}
-    <!-- Add your form content here -->
+{% block sb_content %}
     <div class="container mt-5 mb-5">
         <h1 class="text-center">{{ form.instance.id|yesno:"Edit Book,Add Book" }}</h1>
+        <div class="text-end mb-3">
+            <!-- Button to trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                Add a category
+            </button>
+        </div>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% crispy form %}
+            {% comment %} <div class="mb-3">
+                <label for="id_title" class="form-label">Title</label>
+                <input type="text" name="title" class="form-control" id="id_title" value="{{ form.title.value|default_if_none:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="id_subtitle" class="form-label">Subtitle</label>
+                <input type="text" name="subtitle" class="form-control" id="id_subtitle" value="{{ form.subtitle.value|default_if_none:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="id_authors" class="form-label">Authors</label>
+                <input type="text" name="authors" class="form-control" id="id_authors" value="{{ form.authors.value|default_if_none:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="id_category" class="form-label">Category</label>
+                <select name="category" class="form-select" id="id_category">
+                    {% for category in form.category.field.queryset %}
+                        <option value="{{ category.id }}" {% if category.id == form.category.value %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="id_publisher" class="form-label">Publisher</label>
+                <input type="text" name="publisher" class="form-control" id="id_publisher" value="{{ form.publisher.value|default_if_none:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="id_published_date" class="form-label">Published Date</label>
+                <input type="date" name="published_date" class="form-control" id="id_published_date" value="{{ form.published_date.value|default_if_none:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="id_expense" class="form-label">Expense</label>
+                <input type="number" name="expense" class="form-control" id="id_expense" step="0.01" value="{{ form.expense.value|default_if_none:'' }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button> {% endcomment %}
             <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
         </form>
-{% endblock %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">Add a Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form
+                    method="post"
+                    action="{% url 'api_create_category' %}"
+                    hx-post="{% url 'api_create_category' %}"
+                    hx-target="#id_category"
+                    hx-swap="outerHTML"
+                    >
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_category_name" class="form-label">Category Name</label>
+                            <input type="text" name="name" class="form-control" id="id_category_name">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Category</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock sb_content %}

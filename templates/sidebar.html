@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "navbar.html" %}
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white"
+        style="width: 250px; height: 100vh; position: fixed;">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4">Rumi Press</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="{% url 'books:index' %}" class="nav-link text-white">
+                    Books
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'books:category_list' %}" class="nav-link text-white">
+                    Categories
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    Expenses
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    Report Page
+                </a>
+            </li>
+        </ul>
+        <hr>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4 mt-4" style="margin-left: 250px;">
+        <!-- Add your main content here -->
+        {% block sb_content %}{% endblock sb_content %}
+    </div>
+</div>
+{% endblock content %}

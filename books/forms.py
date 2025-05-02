@@ -1,9 +1,10 @@
+from django.core.validators import FileExtensionValidator
+from django.core.exceptions import ValidationError
 from .models import Category, Book, Expense
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+from utils.pandas import validate_cols
 from django import forms
-
-import logging
 
 
 class CategoryForm(forms.ModelForm):
@@ -18,21 +19,21 @@ class CategoryForm(forms.ModelForm):
 
 
 class BookForm(forms.ModelForm):
-    expense = forms.DecimalField(
-        label='Expense',
-        decimal_places=2, max_digits=7,
-        widget=forms.NumberInput(attrs={'step': '0.01'}),
+    authors = forms.CharField(
+        label='Authors',
+        max_length=255,
+        widget=forms.TextInput(attrs={'placeholder': 'Author1, Author2'}),
     )
 
     class Meta:
         model = Book
         fields = ['title', 'subtitle', 'category', 'authors',
-                  'publisher', 'published_date']
+                  'publisher', 'published_date', 'expense']
         widgets = {
             'published_date': forms.DateInput(
                 attrs={'type': 'date', 'class': 'form-control'}
             ),
-            'authors': forms.CheckboxSelectMultiple(),
+            'expense': forms.NumberInput(attrs={'step': '0.01'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -41,30 +42,43 @@ class BookForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.add_input(Submit('submit', 'Submit'))
 
-        # Managing data saving
-    def save(self, commit=True):
-        instance = super().save(commit=False)
 
-        # Create or update expense related object
-        expense_value = self.cleaned_data.get('expense')
-        # If instance is not saved yet, we don't have an expense id
-        expense_id = instance.expense.id if instance.pk else None
-        expense, created = Expense.objects.update_or_create(
-            pk=expense_id,
-            defaults={'value': expense_value, 'category': instance.category},
-            create_defaults={
-                'value': expense_value, 'category': instance.category
-            },
-        )
+class ImportBooksForm(forms.Form):
+    file = forms.FileField(
+        label='Books Data',
+        validators=[
+            FileExtensionValidator(allowed_extensions=['csv'])],
+        help_text='Upload a .xlsx file with the books data.',
+        required=True,
+        allow_empty_file=False,
+        widget=forms.ClearableFileInput(
+            attrs={'accept': '.csv', 'class': 'form-control'}),
+    )
 
-        # Assign the expense to the book instance
-        instance.expense = expense
-        # Save instance
-        if commit:
-            instance.save()
+    def __init__(self, *args, **kwargs):
+        super(ImportBooksForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
 
-        # Save the many-to-many relationship
-        if 'authors' in self.cleaned_data:
-            self.save_m2m()
+    def clean_file(self):
+        # Check if the uploaded file is a valid spreadsheet
 
-        return instance
+        COLS = [
+            'title', 'subtitle', 'category', 'authors', 'publisher', 'published_date', 'distribution_expense'
+        ]
+
+        file = self.cleaned_data['file']
+        try:
+            import pandas as pd
+            file = pd.read_csv(
+                file,
+                dtype=str,
+                usecols=COLS,
+                encoding='utf-8',
+            )
+
+            file.rename(
+                columns={'distribution_expense': 'expense'}, inplace=True)
+        except ValueError:
+            raise ValidationError(f'Invalid file format or columns')
+
+        return file
