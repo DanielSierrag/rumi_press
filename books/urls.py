@@ -10,9 +10,6 @@ urlpatterns = [
     path('create/', views.BookCreateView.as_view(), name='book_create'),
     path('<int:pk>/update/', views.BookUpdateView.as_view(), name='book_update'),
     path('<int:pk>/delete/', views.BookDeleteView.as_view(), name='book_delete'),
-
-    # IP path
-    path('ip', views.get_ip)
 ]
 
 # Categories CRUD
@@ -43,4 +40,5 @@ urlpatterns += [
 # Report views
 urlpatterns += [
     path('import-books', views.import_books, name='import_books'),
+    path('expenses-dashboard', views.expenses_dashboard, name='expenses_dashboard'),
 ]

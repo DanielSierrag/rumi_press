@@ -1,0 +1,87 @@
+{% extends "sidebar.html" %}
+{% load humanize %}
+
+{% block title %}Expenses Dashboard{% endblock title %}
+
+{% block link_tags %}
+<link href="app/static/css/custom.min.css" rel="stylesheet">
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.3.4.min.js" crossorigin="anonymous"></script>
+{% endblock link_tags %}
+
+{% block sb_content %}
+<div class="container mt-5">
+    <h4 class="text-center">Expenses Dashboard</h4>
+    
+    <!-- Summary Cards -->
+    <div class="row text-center mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Total Expenses</h5>
+                    <p class="card-text">${{ total_expenses|intcomma }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Categories</h5>
+                    <p class="card-text">{{ category_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Highest Spending Category</h5>
+                    <p class="card-text">{{ most_expensive_category_name }} - ${{ most_expensive_category_value|intcomma }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    {% comment %} <div class="row mb-4">
+        <div class="col-md-6">
+            <label for="date-range">Date Range:</label>
+            <input type="date" id="start-date" class="form-control" placeholder="Start Date">
+            <input type="date" id="end-date" class="form-control mt-2" placeholder="End Date">
+        </div>
+        <div class="col-md-6">
+            <label for="category-filter">Category:</label>
+            <select id="category-filter" class="form-control">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div> {% endcomment %}
+
+    <!-- Bokeh Plot -->
+    <div class="bokeh-plot d-flex justify-content-center mb-4">
+        {{ div|safe }}
+        {{ script|safe }}
+    </div>
+
+    <!-- Category Breakdown Table -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Expense</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category, expense in categories.items %}
+                <tr>
+                    <td>{{ category }}</td>
+                    <td>${{ expense }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock sb_content %}

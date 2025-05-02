@@ -39,6 +39,7 @@ class Dev(Configuration):
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
+        'django.contrib.humanize',
         'rest_framework',
         'django_registration',
         'django.contrib.staticfiles',

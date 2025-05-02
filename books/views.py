@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
 from django.shortcuts import redirect, render
 from utils.pandas import format_dataframe
+from utils.bokeh import generate_plot
 from django.urls import reverse_lazy
 from .models import Book, Category
 from django.db.models import Sum
@@ -147,3 +148,42 @@ def import_books(request):
     else:
         form = ImportBooksForm()
     return render(request, 'books/import_books_form.html', {'form': form})
+
+
+@login_required
+def expenses_dashboard(request):
+    # fetch the expenses per category
+    categories = Category.objects.prefetch_related(
+        'books').annotate(total_expenses=Sum('books__expense'))
+
+    # Convert to a dictionary
+    categories = dict(categories.values_list('name', 'total_expenses'))
+    categories = {k: float(v) for k, v in categories.items()}
+    total_expenses = sum(categories.values())
+    category_count = len(categories)
+    most_expensive_category_name = max(categories, key=categories.get)
+    most_expensive_category_value = categories[most_expensive_category_name]
+
+    # Generate the plot using Bokeh
+    plot = generate_plot(categories)
+    # Convert the plot to HTML components
+    from bokeh.embed import components
+    script, div = components(plot)
+
+    # gather context variables
+    context = {
+        'div': div,
+        'script': script,
+        'category_count': category_count,
+        'total_expenses': total_expenses,
+        'categories': categories,
+        'most_expensive_category_name': most_expensive_category_name,
+        'most_expensive_category_value': most_expensive_category_value,
+    }
+
+    # Render the template with the plot
+    return render(
+        request,
+        'books/expenses_dashboard.html',
+        context,
+    )
