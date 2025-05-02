@@ -4,8 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pandas = "*"
-openpyxl = "*"
 django-registration = "*"
 django-configurations = "*"
 dj-database-url = "*"
@@ -14,6 +12,10 @@ django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
 mysqlclient = "*"
 django = "*"
+pandas = "*"
+openpyxl = "*"
+bokeh = "*"
+requests = "*"
 
 [dev-packages]
 

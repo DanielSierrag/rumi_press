@@ -37,4 +37,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('', views.home, name='home'),
     path('books/', include('books.urls')),
+    path('api/v1/', include('books.api.urls')),
 ]
