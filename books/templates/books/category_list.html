@@ -1,5 +1,5 @@
 {% extends "sidebar.html" %}
-{% load books_extra %}
+{% load cache %}
 
 {% block title %}Category List{% endblock title %}
 
@@ -20,12 +20,13 @@
             </tr>
         </thead>
         <tbody>
+            {% cache 300 category_list %}
             {% for category in category_list %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td><a href="{% url 'books:category_detail' category.id %}" class="text-decoration-none">{{ category.name }}</a></td>
                 <td>{{ category.books.count }}</td>
-                <td>${{ category|total_expenses }}</td>
+                <td>${{ category.total_expenses }}</td>
                 <td>
                     <a href="{% url 'books:category_update' category.id %}" class="btn btn-primary btn-sm">Edit</a>
                     <a href="{% url 'books:category_delete' category.id %}" class="btn btn-danger btn-sm">Delete</a>
@@ -36,6 +37,7 @@
                 <td colspan="5" class="text-center">No categories available.</td>
             </tr>
             {% endfor %}
+            {% endcache %}
         </tbody>
     </table>
 </div>

@@ -14,6 +14,13 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - djangoapp
+
+  redis:
+    image: redis:7.4.3-alpine3.21
+    ports:
+      - 6379:6379
+    networks:
+      - djangoapp
   app:
     build: .
     ports:
@@ -22,6 +29,7 @@ services:
       - .:/app
     depends_on:
       - db
+      - redis
     networks:
       - djangoapp
     env_file:

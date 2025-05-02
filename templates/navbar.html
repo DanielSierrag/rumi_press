@@ -1,10 +1,13 @@
 {% extends "base.html" %}
+{% load cache %}
 
 {% block content %}
 <nav class="navbar navbar-dark bg-dark py-3 fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand fs-5" href="{% url 'books:index' %}">Rumi Press - Books Management</a>
+
         <div class="d-flex align-items-center">
+            {% cache 600 authenticated_navbar request.user %}
             {% if user.is_authenticated and request.user.is_active %}
             <span class="navbar-text me-3 fs-6 text-light">Hello, {{ request.user.email }}</span>
             <form action="{% url 'logout' %}" method="post">
@@ -14,6 +17,7 @@
             {% else %}
             <a class="text-light fs-6" href="{% url 'login' %}">Login</a>
             {% endif %}
+            {% endcache %}
         </div>
     </div>
 </nav>

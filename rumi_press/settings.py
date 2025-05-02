@@ -42,6 +42,7 @@ class Dev(Configuration):
         'rest_framework',
         'django_registration',
         'django.contrib.staticfiles',
+        'debug_toolbar',
         'books.apps.BooksConfig',
         'books_auth.apps.BooksAuthConfig',
         'rest_framework.authtoken',
@@ -57,6 +58,7 @@ class Dev(Configuration):
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
 
     ROOT_URLCONF = 'rumi_press.urls'
@@ -163,6 +165,14 @@ class Dev(Configuration):
     LOGIN_REDIRECT_URL = '/accounts/profile/'
     LOGOUT_REDIRECT_URL = '/accounts/login/'
 
+    # Cache config
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://redis:6379",
+        }
+    }
+
     # Internationalization
     # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -208,6 +218,9 @@ class Dev(Configuration):
             'rest_framework.permissions.IsAuthenticated',
         ],
     }
+
+    # Django debug toolbar
+    INTERNAL_IPS = ['localhost', '127.0.0.1', '172.21.0.1']
 
 
 class Prod(Dev):

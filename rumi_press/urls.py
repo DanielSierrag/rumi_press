@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django_registration.backends.one_step.views import RegistrationView
+from debug_toolbar.toolbar import debug_toolbar_urls
 from books_auth.forms import RegistrationForm
 from django.views.generic import TemplateView
 from django.urls import path, include
@@ -39,3 +40,7 @@ urlpatterns = [
     path('books/', include('books.urls')),
     path('api/v1/', include('books.api.urls')),
 ]
+
+
+# Django debur toolbar urls
+urlpatterns += debug_toolbar_urls()

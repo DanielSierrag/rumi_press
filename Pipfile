@@ -16,6 +16,8 @@ pandas = "*"
 openpyxl = "*"
 bokeh = "*"
 requests = "*"
+django-debug-toolbar = "*"
+redis = "*"
 
 [dev-packages]
 

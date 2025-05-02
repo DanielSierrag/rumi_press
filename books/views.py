@@ -1,13 +1,14 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import CategoryForm, BookForm, ImportBooksForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
 from django.shortcuts import redirect, render
-from .models import Book, Category
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from utils.pandas import format_dataframe
 from django.urls import reverse_lazy
+from .models import Book, Category
+from django.db.models import Sum
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,8 +30,7 @@ class BookDetailView(LoginRequiredMixin, DetailView):
     model = Book
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.prefetch_related('category')
+        return Book.objects.prefetch_related('category')
 
 
 class BookCreateView(LoginRequiredMixin, CreateView):
@@ -58,7 +58,9 @@ class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
 
     def get_queryset(self):
-        return Category.objects.prefetch_related('books')
+        return Category.objects.prefetch_related('books').annotate(
+            total_expenses=Sum('books__expense')
+        )
 
 
 class CategoryDetailView(LoginRequiredMixin, DetailView):
@@ -66,7 +68,8 @@ class CategoryDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.prefetch_related('books')
+        return qs.prefetch_related('books').annotate(
+            total_expenses=Sum('books__expense'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -25,17 +25,17 @@
             </thead>
             <tbody>
                 {% for book in book_list %}
-                    <tr>
-                        <td><a href="{% url 'books:book_detail' book.id %}" class="text-decoration-none">{{ book.title }}</a></td>
-                        <td>{{ book.subtitle }}</td>
-                        <td>{{ book.category }}</td>
-                        <td>{{ book.publisher }}</td>
-                        <td>{{ book.published_date }}</td>
-                        <td class='text-center'>${{ book.expense }}</td>
-                        <td>
-                            <a href="{% url 'books:book_delete' book.id %}" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td><a href="{% url 'books:book_detail' book.id %}" class="text-decoration-none">{{ book.title }}</a></td>
+                    <td>{{ book.subtitle }}</td>
+                    <td>{{ book.category }}</td>
+                    <td>{{ book.publisher }}</td>
+                    <td>{{ book.published_date }}</td>
+                    <td class='text-center'>${{ book.expense }}</td>
+                    <td>
+                        <a href="{% url 'books:book_delete' book.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
