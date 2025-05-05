@@ -5,11 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
 from django.shortcuts import redirect, render
+from django_filters.views import FilterView
 from utils.pandas import format_dataframe
 from utils.bokeh import generate_plot
 from django.urls import reverse_lazy
 from .models import Book, Category
 from django.db.models import Sum
+from .filters import BookFilter
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,9 +21,12 @@ logger = logging.getLogger(__name__)
 # Books CRUD
 
 
-class BookListView(LoginRequiredMixin, ListView):
+class BookListView(LoginRequiredMixin, FilterView, ListView):
     model = Book
+    filterset_class = BookFilter
     paginate_by = 25
+    context_object_name = 'books'
+    template_name = 'books/book_list.html'
 
     def get_queryset(self):
         return Book.objects.prefetch_related('category').order_by('-id')

@@ -49,6 +49,7 @@ class Dev(Configuration):
         'rest_framework.authtoken',
         'crispy_forms',
         'crispy_bootstrap5',
+        'django_filters',
     ]
 
     MIDDLEWARE = [
