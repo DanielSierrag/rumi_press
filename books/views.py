@@ -4,14 +4,15 @@ from .forms import CategoryForm, BookForm, ImportBooksForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
+from .filters import BookFilter, CategoriesFilter
 from django.shortcuts import redirect, render
 from django_filters.views import FilterView
 from utils.pandas import format_dataframe
 from utils.bokeh import generate_plot
 from django.urls import reverse_lazy
+from django.contrib import messages
 from .models import Book, Category
 from django.db.models import Sum
-from .filters import BookFilter
 import logging
 
 logger = logging.getLogger(__name__)
@@ -158,11 +159,14 @@ def import_books(request):
 @login_required
 def expenses_dashboard(request):
     # fetch the expenses per category
-    categories = Category.objects.prefetch_related(
+    queryset = Category.objects.prefetch_related(
         'books').annotate(total_expenses=Sum('books__expense'))
 
+    # Make filter for the categories
+    f = CategoriesFilter(request.GET, queryset=queryset)
+
     # Convert to a dictionary
-    categories = dict(categories.values_list('name', 'total_expenses'))
+    categories = dict(f.qs.values_list('name', 'total_expenses'))
     categories = {k: float(v) for k, v in categories.items()}
     total_expenses = sum(categories.values())
     category_count = len(categories)
@@ -170,13 +174,20 @@ def expenses_dashboard(request):
     most_expensive_category_value = categories[most_expensive_category_name]
 
     # Generate the plot using Bokeh
-    plot = generate_plot(categories)
+    try:
+        plot = generate_plot(categories)
+    except KeyError:
+        messages.error(
+            request, f"You should select at least 3 categories and you selected {category_count}")
+        return redirect(reverse_lazy('books:expenses_dashboard'))
+
     # Convert the plot to HTML components
     from bokeh.embed import components
     script, div = components(plot)
 
     # gather context variables
     context = {
+        'filter': f,
         'div': div,
         'script': script,
         'category_count': category_count,

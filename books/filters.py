@@ -2,9 +2,8 @@
 This module contains filters for processing book, expenses and categories data in the view.
 """
 
-from .forms import BookFilterForm
-from .models import Book
 from django import forms
+from .models import Category, Book
 import django_filters
 
 
@@ -63,18 +62,26 @@ class BookFilter(django_filters.FilterSet):
             'type': 'date',
         })
     )
+    category = django_filters.MultipleChoiceFilter(
+        field_name="category",
+        choices=[
+            (cid, name) for cid, name in Category.objects.values_list('id', 'name').distinct()
+        ],
+        label="Category",
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input',
+        }),
+    )
 
-    # class Meta:
-    #     model=Book
-    #     # fields = ['title', 'subtitle', 'authors',
-    #     #           'category', 'publisher', 'published_date']
-    #     fields={
-    #         'title': ['icontains'],
-    #         'subtitle': ['icontains'],
-    #         'authors': ['icontains'],
-    #         'category': ['exact'],
-    #         'publisher': ['icontains'],
-    #         'published_date': ['exact'],
-    #     }
-    #     exclude=['title', 'published_date']
-    # form = BookFilterForm
+
+class CategoriesFilter(django_filters.FilterSet):
+    name = django_filters.MultipleChoiceFilter(
+        field_name="name",
+        choices=[
+            (name, name) for name in Category.objects.values_list('name', flat=True).distinct()
+        ],
+        label="Category",
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input',
+        }),
+    )

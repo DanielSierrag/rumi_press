@@ -11,6 +11,32 @@
     <title>{% block title %}Rumi Press{% endblock title %}</title>
   </head>
   <body>
+    <!-- Django Messages using Bootstrap Toasts -->
+    {% if messages %}
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        {% for message in messages %}
+          <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+            <div class="toast-header">
+              <strong class="me-auto">Notification</strong>
+              <small class="text-muted">just now</small>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-bg-{{ message.tags }}">
+              {{ message }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+          toastElList.map(function (toastEl) {
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+          });
+        });
+      </script>
+    {% endif %}
 
     {% block content %}
     {% endblock content %}

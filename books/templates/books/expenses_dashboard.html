@@ -8,6 +8,10 @@
 <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.3.4.min.js" crossorigin="anonymous"></script>
 {% endblock link_tags %}
 
+{% block filter_form %}
+{% include "books/filter.html" %}
+{% endblock filter_form %}
+
 {% block sb_content %}
 <div class="container mt-5">
     <h4 class="text-center">Expenses Dashboard</h4>
@@ -77,7 +81,7 @@
                 {% for category, expense in categories.items %}
                 <tr>
                     <td>{{ category }}</td>
-                    <td>${{ expense }}</td>
+                    <td>${{ expense|intcomma }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
